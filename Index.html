@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hebrew Practice with Cats</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #faf3e8;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .container::before {
+            content: "😺";
+            position: absolute;
+            top: -25px;
+            left: 20px;
+            font-size: 40px;
+        }
+        .title {
+            text-align: center;
+            color: #e67e22;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .sentence-box {
+            background-color: #fff9f0;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            border: 2px solid #fde7cc;
+        }
+        .answer-box {
+            background-color: #e8f6f3;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #d1f2eb;
+        }
+        .explanation-box {
+            background-color: #fef9e7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #fcf3cf;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        .primary-button {
+            background-color: #e67e22;
+            color: white;
+        }
+        .primary-button:hover {
+            background-color: #d35400;
+        }
+        .secondary-button {
+            background-color: white;
+            border: 2px solid #e67e22;
+            color: #e67e22;
+        }
+        .secondary-button:hover {
+            background-color: #fff9f0;
+        }
+        .hebrew-text {
+            font-size: 1.2em;
+            direction: rtl;
+            text-align: right;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const verbs = [
+            { 
+                english: "study", 
+                past: "lamadeti", pastEng: "studied",
+                present: "lomed", presentEng: "studying",
+                future: "elmad",
+                hebrew: "ללמוד",
+                hebrewPast: "למדתי",
+                hebrewPresent: "לומד",
+                hebrewFuture: "אלמד"
+            },
+            { 
+                english: "eat", 
+                past: "achalti", pastEng: "ate",
+                present: "ochel", presentEng: "eating",
+                future: "ochal",
+                hebrew: "לאכול",
+                hebrewPast: "אכלתי",
+                hebrewPresent: "אוכל",
+                hebrewFuture: "אוכל"
+            },
+            { 
+                english: "work", 
+                past: "avadti", pastEng: "worked",
+                present: "oved", presentEng: "working",
+                future: "avod",
+                hebrew: "לעבוד",
+                hebrewPast: "עבדתי",
+                hebrewPresent: "עובד",
+                hebrewFuture: "אעבוד"
+            },
+            { 
+                english: "sleep", 
+                past: "yashanti", pastEng: "slept",
+                present: "yashen", presentEng: "sleeping",
+                future: "ishan",
+                hebrew: "לישון",
+                hebrewPast: "ישנתי",
+                hebrewPresent: "ישן",
+                hebrewFuture: "אישן"
+            },
+            { 
+                english: "read", 
+                past: "karati", pastEng: "read",
+                present: "kore", presentEng: "reading",
+                future: "ekra",
+                hebrew: "לקרוא",
+                hebrewPast: "קראתי",
+                hebrewPresent: "קורא",
+                hebrewFuture: "אקרא"
+            }
+        ];
+
+        const timeMarkers = {
+            past: [
+                { english: "yesterday", hebrew: "etmol", hebrewScript: "אתמול" },
+                { english: "last week", hebrew: "shavua sheavar", hebrewScript: "שבוע שעבר" },
+                { english: "two days ago", hebrew: "lifney yomayim", hebrewScript: "לפני יומיים" }
+            ],
+            present: [
+                { english: "now", hebrew: "achshav", hebrewScript: "עכשיו" },
+                { english: "today", hebrew: "hayom", hebrewScript: "היום" },
+                { english: "right now", hebrew: "karega", hebrewScript: "כרגע" }
+            ],
+            future: [
+                { english: "tomorrow", hebrew: "machar", hebrewScript: "מחר" },
+                { english: "next week", hebrew: "shavua haba", hebrewScript: "שבוע הבא" },
+                { english: "in two days", hebrew: "beod yomayim", hebrewScript: "בעוד יומיים" }
+            ]
+        };
+
+        function App() {
+            const [sentence, setSentence] = React.useState("");
+            const [showAnswer, setShowAnswer] = React.useState(false);
+            const [hebrewSentence, setHebrewSentence] = React.useState("");
+            const [hebrewScriptSentence, setHebrewScriptSentence] = React.useState("");
+            const [explanation, setExplanation] = React.useState("");
+
+            const generateSentence = () => {
+                const verb1 = verbs[Math.floor(Math.random() * verbs.length)];
+                let verb2;
+                do {
+                    verb2 = verbs[Math.floor(Math.random() * verbs.length)];
+                } while (verb2 === verb1);
+
+                // Randomly choose a sentence pattern
+                const patterns = ["past-present", "past-future", "present-future"];
+                const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+
+                let marker1, marker2, englishSentence, hebrewSentence, hebrewScriptSentence;
+
+                switch(pattern) {
+                    case "past-present":
+                        marker1 = timeMarkers.past[Math.floor(Math.random() * timeMarkers.past.length)];
+                        marker2 = timeMarkers.present[Math.floor(Math.random() * timeMarkers.present.length)];
+                        englishSentence = `${marker1.english} I ${verb1.pastEng}, and ${marker2.english} I am ${verb2.presentEng}`;
+                        hebrewSentence = `${marker1.hebrew} ${verb1.past}, ve${marker2.hebrew} ani ${verb2.present}`;
+                        hebrewScriptSentence = `${marker1.hebrewScript} ${verb1.hebrewPast}, ו${marker2.hebrewScript} אני ${verb2.hebrewPresent}`;
+                        break;
+                    case "past-future":
+                        marker1 = timeMarkers.past[Math.floor(Math.random() * timeMarkers.past.length)];
+                        marker2 = timeMarkers.future[Math.floor(Math.random() * timeMarkers.future.length)];
+                        englishSentence = `${marker1.english} I ${verb1.pastEng}, and ${marker2.english} I will ${verb1.english}`;
+                        hebrewSentence = `${marker1.hebrew} ${verb1.past}, ve${marker2.hebrew} ani ${verb2.future}`;
+                        hebrewScriptSentence = `${marker1.hebrewScript} ${verb1.hebrewPast}, ו${marker2.hebrewScript} אני ${verb2.hebrewFuture}`;
+                        break;
+                    case "present-future":
+                        marker1 = timeMarkers.present[Math.floor(Math.random() * timeMarkers.present.length)];
+                        marker2 = timeMarkers.future[Math.floor(Math.random() * timeMarkers.future.length)];
+                        englishSentence = `${marker1.english} I am ${verb1.presentEng}, and ${marker2.english} I will ${verb2.english}`;
+                        hebrewSentence = `${marker1.hebrew} ani ${verb1.present}, ve${marker2.hebrew} ani ${verb2.future}`;
+                        hebrewScriptSentence = `${marker1.hebrewScript} אני ${verb1.hebrewPresent}, ו${marker2.hebrewScript} אני ${verb2.hebrewFuture}`;
+                        break;
+                }
+
+                const explanation = `
+                    Time markers:
+                    - ${marker1.english} = ${marker1.hebrew} (${marker1.hebrewScript})
+                    - ${marker2.english} = ${marker2.hebrew} (${marker2.hebrewScript})
+                    
+                    Verbs:
+                    1. ${verb1.english}
+                    - Past: ${verb1.past} (${verb1.hebrewPast})
+                    - Present: ${verb1.present} (${verb1.hebrewPresent})
+                    - Future: ${verb1.future} (${verb1.hebrewFuture})
+                    
+                    2. ${verb2.english}
+                    - Past: ${verb2.past} (${verb2.hebrewPast})
+                    - Present: ${verb2.present} (${verb2.hebrewPresent})
+                    - Future: ${verb2.future} (${verb2.hebrewFuture})
+                `;
+
+                setSentence(englishSentence);
+                setHebrewSentence(hebrewSentence);
+                setHebrewScriptSentence(hebrewScriptSentence);
+                setExplanation(explanation);
+                setShowAnswer(false);
+            };
+
+            return (
+                <div className="container">
+                    <h1 className="title">Hebrew Practice</h1>
+                    
+                    <div className="sentence-box">
+                        {sentence ? (
+                            <p style={{ fontSize: '18px', fontWeight: '500', margin: 0 }}>
+                                {sentence}
+                            </p>
+                        ) : (
+                            <p style={{ textAlign: 'center', color: '#666' }}>
+                                Click "Generate" to start practicing
+                            </p>
+                        )}
+                        
+                        {showAnswer && sentence && (
+                            <>
+                                <div className="answer-box">
+                                    <div className="section-title">Hebrew (Transliteration):</div>
+                                    {hebrewSentence}
+                                    <div className="section-title" style={{marginTop: '15px'}}>Hebrew Script:</div>
+                                    <div className="hebrew-text">{hebrewScriptSentence}</div>
+                                </div>
+                                <div className="explanation-box">
+                                    <div className="section-title">Explanation:</div>
+                                    <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+                                        {explanation}
+                                    </pre>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="button-container">
+                        <button 
+                            onClick={generateSentence}
+                            className="primary-button"
+                        >
+                            Generate New Sentence
+                        </button>
+                        
+                        {sentence && (
+                            <button 
+                                onClick={() => setShowAnswer(!showAnswer)}
+                                className="secondary-button"
+                            >
+                                {showAnswer ? "Hide Answer" : "Show Answer"}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
