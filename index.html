@@ -12,7 +12,12 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #faf3e8;
+            background-color: #fdf6e3;
+            background-image: linear-gradient(45deg, #fff8e7 25%, transparent 25%),
+                linear-gradient(-45deg, #fff8e7 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #fff8e7 75%),
+                linear-gradient(-45deg, transparent 75%, #fff8e7 75%);
+            background-size: 20px 20px;
             line-height: 1.6;
             color: #2c3e50;
         }
@@ -21,7 +26,7 @@
             margin: 0 auto;
             background: white;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             position: relative;
         }
@@ -32,33 +37,72 @@
             left: 20px;
             font-size: 40px;
         }
+        .container::after {
+            content: "😸";
+            position: absolute;
+            top: -25px;
+            right: 20px;
+            font-size: 40px;
+        }
         .title {
             text-align: center;
-            color: #e67e22;
+            color: #ff6b6b;
             margin-bottom: 30px;
             font-size: 2em;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .title::after {
+            content: "🐾";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
         }
         .sentence-box {
             background-color: #fff9f0;
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 15px;
             margin-bottom: 20px;
             min-height: 60px;
-            border: 2px solid #fde7cc;
+            border: 2px solid #ffe4c4;
+            position: relative;
+        }
+        .sentence-box::before {
+            content: "🐱";
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            font-size: 24px;
+            background: white;
+            border-radius: 50%;
+            padding: 5px;
         }
         .answer-box {
-            background-color: #e8f6f3;
+            background-color: #f0f7ff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-top: 20px;
-            border: 2px solid #d1f2eb;
+            border: 2px solid #d1e8ff;
+            position: relative;
+        }
+        .answer-box::after {
+            content: "😺";
+            position: absolute;
+            bottom: -15px;
+            right: 15px;
+            font-size: 24px;
+            background: white;
+            border-radius: 50%;
+            padding: 5px;
         }
         .explanation-box {
-            background-color: #fef9e7;
+            background-color: #fff5f5;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-top: 20px;
-            border: 2px solid #fcf3cf;
+            border: 2px solid #ffe3e3;
         }
         .button-container {
             display: flex;
@@ -68,33 +112,54 @@
         }
         button {
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 20px;
             border: none;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
         }
         .primary-button {
-            background-color: #e67e22;
+            background-color: #ff6b6b;
             color: white;
         }
         .primary-button:hover {
-            background-color: #d35400;
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+        .primary-button::after {
+            content: "🐾";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .primary-button:hover::after {
+            opacity: 1;
         }
         .secondary-button {
             background-color: white;
-            border: 2px solid #e67e22;
-            color: #e67e22;
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
         }
         .secondary-button:hover {
             background-color: #fff9f0;
+            transform: translateY(-2px);
         }
         .hebrew-text {
             font-size: 1.2em;
             direction: rtl;
             text-align: right;
             margin-top: 10px;
+            padding: 10px;
+            background-color: #fff9f0;
+            border-radius: 10px;
+            border-left: 3px solid #ff6b6b;
         }
     </style>
 </head>
@@ -113,6 +178,96 @@
                 hebrewFuture: "אלמד"
             },
             { 
+                english: "prepare", 
+                past: "hechanti", pastEng: "prepared",
+                present: "mechin", presentEng: "preparing",
+                future: "achin",
+                hebrew: "להכין",
+                hebrewPast: "הכנתי",
+                hebrewPresent: "מכין",
+                hebrewFuture: "אכין"
+            },
+            { 
+                english: "show", 
+                past: "hereti", pastEng: "showed",
+                present: "mareh", presentEng: "showing",
+                future: "areh",
+                hebrew: "להראות",
+                hebrewPast: "הראיתי",
+                hebrewPresent: "מראה",
+                hebrewFuture: "אראה"
+            },
+            { 
+                english: "cry", 
+                past: "bachiti", pastEng: "cried",
+                present: "boche", presentEng: "crying",
+                future: "evke",
+                hebrew: "לבכות",
+                hebrewPast: "בכיתי",
+                hebrewPresent: "בוכה",
+                hebrewFuture: "אבכה"
+            },
+            { 
+                english: "cancel", 
+                past: "bitalti", pastEng: "cancelled",
+                present: "mevatel", presentEng: "cancelling",
+                future: "avatel",
+                hebrew: "לבטל",
+                hebrewPast: "ביטלתי",
+                hebrewPresent: "מבטל",
+                hebrewFuture: "אבטל"
+            },
+            { 
+                english: "hope", 
+                past: "kiviti", pastEng: "hoped",
+                present: "mekave", presentEng: "hoping",
+                future: "akave",
+                hebrew: "לקוות",
+                hebrewPast: "קיוויתי",
+                hebrewPresent: "מקווה",
+                hebrewFuture: "אקווה"
+            },
+            { 
+                english: "record", 
+                past: "hiklatti", pastEng: "recorded",
+                present: "maklit", presentEng: "recording",
+                future: "aklit",
+                hebrew: "להקליט",
+                hebrewPast: "הקלטתי",
+                hebrewPresent: "מקליט",
+                hebrewFuture: "אקליט"
+            },
+            { 
+                english: "answer", 
+                past: "aniti", pastEng: "answered",
+                present: "one", presentEng: "answering",
+                future: "aane",
+                hebrew: "לענות",
+                hebrewPast: "עניתי",
+                hebrewPresent: "עונה",
+                hebrewFuture: "אענה"
+            },
+            { 
+                english: "bring", 
+                past: "heveti", pastEng: "brought",
+                present: "mevi", presentEng: "bringing",
+                future: "avi",
+                hebrew: "להביא",
+                hebrewPast: "הבאתי",
+                hebrewPresent: "מביא",
+                hebrewFuture: "אביא"
+            },
+            { 
+                english: "do", 
+                past: "asiti", pastEng: "did",
+                present: "ose", presentEng: "doing",
+                future: "ese",
+                hebrew: "לעשות",
+                hebrewPast: "עשיתי",
+                hebrewPresent: "עושה",
+                hebrewFuture: "אעשה"
+            },
+            { 
                 english: "eat", 
                 past: "achalti", pastEng: "ate",
                 present: "ochel", presentEng: "eating",
@@ -123,14 +278,14 @@
                 hebrewFuture: "אוכל"
             },
             { 
-                english: "work", 
-                past: "avadti", pastEng: "worked",
-                present: "oved", presentEng: "working",
-                future: "avod",
-                hebrew: "לעבוד",
-                hebrewPast: "עבדתי",
-                hebrewPresent: "עובד",
-                hebrewFuture: "אעבוד"
+                english: "drink", 
+                past: "shatiti", pastEng: "drank",
+                present: "shote", presentEng: "drinking",
+                future: "eshte",
+                hebrew: "לשתות",
+                hebrewPast: "שתיתי",
+                hebrewPresent: "שותה",
+                hebrewFuture: "אשתה"
             },
             { 
                 english: "sleep", 
@@ -143,6 +298,16 @@
                 hebrewFuture: "אישן"
             },
             { 
+                english: "speak", 
+                past: "dibarti", pastEng: "spoke",
+                present: "medaber", presentEng: "speaking",
+                future: "adaber",
+                hebrew: "לדבר",
+                hebrewPast: "דיברתי",
+                hebrewPresent: "מדבר",
+                hebrewFuture: "אדבר"
+            },
+            { 
                 english: "read", 
                 past: "karati", pastEng: "read",
                 present: "kore", presentEng: "reading",
@@ -151,12 +316,83 @@
                 hebrewPast: "קראתי",
                 hebrewPresent: "קורא",
                 hebrewFuture: "אקרא"
+            },
+            { 
+                english: "write", 
+                past: "katavti", pastEng: "wrote",
+                present: "kotev", presentEng: "writing",
+                future: "echtov",
+                hebrew: "לכתוב",
+                hebrewPast: "כתבתי",
+                hebrewPresent: "כותב",
+                hebrewFuture: "אכתוב"
+            },
+            { 
+                english: "walk", 
+                past: "halachti", pastEng: "walked",
+                present: "holech", presentEng: "walking",
+                future: "elech",
+                hebrew: "ללכת",
+                hebrewPast: "הלכתי",
+                hebrewPresent: "הולך",
+                hebrewFuture: "אלך"
+            },
+            { 
+                english: "play", 
+                past: "sichakti", pastEng: "played",
+                present: "mesachek", presentEng: "playing",
+                future: "asachek",
+                hebrew: "לשחק",
+                hebrewPast: "שיחקתי",
+                hebrewPresent: "משחק",
+                hebrewFuture: "אשחק"
+            },
+            { 
+                english: "dance", 
+                past: "rakadti", pastEng: "danced",
+                present: "roked", presentEng: "dancing",
+                future: "erkod",
+                hebrew: "לרקוד",
+                hebrewPast: "רקדתי",
+                hebrewPresent: "רוקד",
+                hebrewFuture: "ארקוד"
+            },
+            { 
+                english: "leave", 
+                past: "yatzati", pastEng: "left",
+                present: "yotze", presentEng: "leaving",
+                future: "etze",
+                hebrew: "לצאת",
+                hebrewPast: "יצאתי",
+                hebrewPresent: "יוצא",
+                hebrewFuture: "אצא"
+            },
+            { 
+                english: "search for something", 
+                past: "chipasti mashehu", pastEng: "searched for something",
+                present: "mechapes mashehu", presentEng: "searching for something",
+                future: "achapes mashehu",
+                hebrew: "לחפש משהו",
+                hebrewPast: "חיפשתי משהו",
+                hebrewPresent: "מחפש משהו",
+                hebrewFuture: "אחפש משהו"
+            },
+            { 
+                english: "find something", 
+                past: "matzati mashehu", pastEng: "found something",
+                present: "motze mashehu", presentEng: "finding something",
+                future: "emtza mashehu",
+                hebrew: "למצוא משהו",
+                hebrewPast: "מצאתי משהו",
+                hebrewPresent: "מוצא משהו",
+                hebrewFuture: "אמצא משהו"
             }
         ];
 
         const timeMarkers = {
             past: [
-                { english: "yesterday", hebrew: "etmol", hebrewScript: "אתמול" },
+                { english: "yesterday", hebrew: "etmol", hebrewScript: "אתמ" },
+				{ english: "yesterday", hebrew: "etmol", hebrewScript: "אתמול" },
                 { english: "last week", hebrew: "shavua sheavar", hebrewScript: "שבוע שעבר" },
                 { english: "two days ago", hebrew: "lifney yomayim", hebrewScript: "לפני יומיים" }
             ],
@@ -186,7 +422,6 @@
                     verb2 = verbs[Math.floor(Math.random() * verbs.length)];
                 } while (verb2 === verb1);
 
-                // Randomly choose a sentence pattern
                 const patterns = ["past-present", "past-future", "present-future"];
                 const pattern = patterns[Math.floor(Math.random() * patterns.length)];
 
@@ -203,7 +438,7 @@
                     case "past-future":
                         marker1 = timeMarkers.past[Math.floor(Math.random() * timeMarkers.past.length)];
                         marker2 = timeMarkers.future[Math.floor(Math.random() * timeMarkers.future.length)];
-                        englishSentence = `${marker1.english} I ${verb1.pastEng}, and ${marker2.english} I will ${verb1.english}`;
+                        englishSentence = `${marker1.english} I ${verb1.pastEng}, and ${marker2.english} I will ${verb2.english}`;
                         hebrewSentence = `${marker1.hebrew} ${verb1.past}, ve${marker2.hebrew} ani ${verb2.future}`;
                         hebrewScriptSentence = `${marker1.hebrewScript} ${verb1.hebrewPast}, ו${marker2.hebrewScript} אני ${verb2.hebrewFuture}`;
                         break;
