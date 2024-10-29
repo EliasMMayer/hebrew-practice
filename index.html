@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hebrew Verb Practice</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        .sentence-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        .answer-box {
+            background-color: #e6f4ea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        .explanation-box {
+            background-color: #fef7e0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .primary-button {
+            background-color: #1a73e8;
+            color: white;
+        }
+        .primary-button:hover {
+            background-color: #1557b0;
+        }
+        .secondary-button {
+            background-color: white;
+            border: 1px solid #1a73e8;
+            color: #1a73e8;
+        }
+        .secondary-button:hover {
+            background-color: #f8f9fa;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const verbs = [
+            { english: "study", base: "lilmod", past: "lamadeti", present: "lomed", future: "elmad" },
+            { english: "prepare", base: "lehachin", past: "hechanti", present: "mechin", future: "achin" },
+            { english: "show", base: "leharot", past: "hereti", present: "mareh", future: "areh" },
+            { english: "cry", base: "livkot", past: "bachiti", present: "boche", future: "evkeh" },
+            { english: "cancel", base: "levatel", past: "bitalti", present: "mevatel", future: "avatel" },
+            { english: "hope", base: "lekavot", past: "kiviti", present: "mekaveh", future: "akaveh" },
+            { english: "record", base: "lehaplit", past: "heklati", present: "maklit", future: "aklit" },
+            { english: "answer", base: "laanot", past: "aniti", present: "oneh", future: "aaneh" },
+            { english: "bring", base: "lehavi", past: "heveti", present: "mevi", future: "avi" },
+            { english: "do", base: "laasot", past: "asiti", present: "oseh", future: "eeseh" },
+            { english: "use", base: "lehishtamesh", past: "hishtamashti", present: "mishtamesh", future: "eshtamesh" },
+            { english: "need to", base: "chayav", past: "hayiti chayav", present: "chayav", future: "ehiye chayav" },
+            { english: "can", base: "yachol", past: "yacholti", present: "yachol", future: "uchal" }
+        ];
+
+        const timeMarkers = {
+            past: [
+                { english: "yesterday", hebrew: "etmol" },
+                { english: "last week", hebrew: "shavua sheavar" },
+                { english: "two days ago", hebrew: "lifney yomayim" }
+            ],
+            present: [
+                { english: "now", hebrew: "achshav" },
+                { english: "today", hebrew: "hayom" },
+                { english: "right now", hebrew: "karega" }
+            ],
+            future: [
+                { english: "tomorrow", hebrew: "machar" },
+                { english: "next week", hebrew: "shavua haba" },
+                { english: "in two days", hebrew: "beod yomayim" }
+            ]
+        };
+
+        const templates = [
+            {
+                type: "past-present",
+                english: "{timeMarker1} I {verb1}, and {timeMarker2} I am {verb2}ing",
+                hebrew: "{timeMarker1} {verb1_past}, ve{timeMarker2} ani {verb2_present}"
+            },
+            {
+                type: "future-present",
+                english: "{timeMarker1} I will {verb1}, while {timeMarker2} I am {verb2}ing",
+                hebrew: "{timeMarker1} ani {verb1_future}, ve{timeMarker2} ani {verb2_present}"
+            },
+            {
+                type: "past-future",
+                english: "{timeMarker1} I {verb1}, {timeMarker2} I will {verb2}",
+                hebrew: "{timeMarker1} {verb1_past}, {timeMarker2} ani {verb2_future}"
+            }
+        ];
+
+        function App() {
+            const [sentence, setSentence] = React.useState("");
+            const [showAnswer, setShowAnswer] = React.useState(false);
+            const [hebrewSentence, setHebrewSentence] = React.useState("");
+            const [explanation, setExplanation] = React.useState("");
+
+            const generateSentence = () => {
+                const verb1 = verbs[Math.floor(Math.random() * verbs.length)];
+                let verb2;
+                do {
+                    verb2 = verbs[Math.floor(Math.random() * verbs.length)];
+                } while (verb2 === verb1);
+
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                const marker1 = template.type.includes('past') ? 
+                    timeMarkers.past[Math.floor(Math.random() * timeMarkers.past.length)] :
+                    timeMarkers.future[Math.floor(Math.random() * timeMarkers.future.length)];
+                const marker2 = template.type.includes('present') ?
+                    timeMarkers.present[Math.floor(Math.random() * timeMarkers.present.length)] :
+                    timeMarkers.future[Math.floor(Math.random() * timeMarkers.future.length)];
+
+                const englishSentence = template.english
+                    .replace("{timeMarker1}", marker1.english)
+                    .replace("{timeMarker2}", marker2.english)
+                    .replace("{verb1}", verb1.english)
+                    .replace("{verb2}", verb2.english);
+
+                const newHebrewSentence = template.hebrew
+                    .replace("{timeMarker1}", marker1.hebrew)
+                    .replace("{timeMarker2}", marker2.hebrew)
+                    .replace("{verb1_past}", verb1.past)
+                    .replace("{verb1_future}", verb1.future)
+                    .replace("{verb2_present}", verb2.present)
+                    .replace("{verb2_future}", verb2.future);
+
+                const explanation = `
+                    Verb 1: ${verb1.base} (${verb1.english})
+                    - Used form: ${template.type.includes('past') ? verb1.past : verb1.future}
+
+                    Verb 2: ${verb2.base} (${verb2.english})
+                    - Used form: ${template.type.includes('present') ? verb2.present : verb2.future}
+                    
+                    Time markers:
+                    - ${marker1.english} = ${marker1.hebrew}
+                    - ${marker2.english} = ${marker2.hebrew}
+                    
+                    Grammar notes:
+                    - Past tense doesn't need "ani"
+                    - Present and future tenses need "ani" before the verb
+                    - "ve" means "and" and connects the two parts
+                `;
+
+                setSentence(englishSentence);
+                setHebrewSentence(newHebrewSentence);
+                setExplanation(explanation);
+                setShowAnswer(false);
+            };
+
+            return (
+                <div className="container">
+                    <h1 className="title">Hebrew Verb Practice</h1>
+                    
+                    <div className="sentence-box">
+                        {sentence ? (
+                            <p style={{ fontSize: '18px', fontWeight: '500', margin: 0 }}>
+                                {sentence}
+                            </p>
+                        ) : (
+                            <p style={{ textAlign: 'center', color: '#666' }}>
+                                Click "Generate" to start practicing
+                            </p>
+                        )}
+                        
+                        {showAnswer && sentence && (
+                            <>
+                                <div className="answer-box">
+                                    <div className="section-title">Hebrew Answer:</div>
+                                    {hebrewSentence}
+                                </div>
+                                <div className="explanation-box">
+                                    <div className="section-title">Explanation:</div>
+                                    <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+                                        {explanation}
+                                    </pre>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="button-container">
+                        <button 
+                            onClick={generateSentence}
+                            className="primary-button"
+                        >
+                            Generate New Sentence
+                        </button>
+                        
+                        {sentence && (
+                            <button 
+                                onClick={() => setShowAnswer(!showAnswer)}
+                                className="secondary-button"
+                            >
+                                {showAnswer ? "Hide Answer" : "Show Answer"}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
